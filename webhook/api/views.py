@@ -35,13 +35,13 @@ def process_build(payloads, event_name):
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull origin master")
         shell_run = subprocess.run([
-            'docker-compose', 'stop;',
-            'docker-compose', 'build;',
-            'docker-compose', 'run', 'web', 'python', 'manage.py', 'check;',
-            'docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations;',
-            'docker-compose', 'run' 'web', 'python', 'manage.py', 'migrate;',
-            'docker-compose', 'up', '-d;',
-            'docker-compose', 'logs', '-t', '--tail=10;',
+            'docker-compose', 'stop', '&&',
+            'docker-compose', 'build', '&&',
+            'docker-compose', 'run', 'web', 'python', 'manage.py', 'check', '&&',
+            'docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations', '&&',
+            'docker-compose', 'run' 'web', 'python', 'manage.py', 'migrate', '&&',
+            'docker-compose', 'up', '-d', '&&',
+            'docker-compose', 'logs', '-t', '--tail=10', '&&',
         ], capture_output=True)
         error_logs = shell_run.stderr.decode('utf-8')
         print("Now on: " + os.getcwd())
