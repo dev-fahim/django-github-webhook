@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:4200 --workers 3 django_github_webhook.deploy_wsgi:application  # python manage.py runserver 0.0.0.0:4200 #
+    # command: python manage.py runserver 0.0.0.0:4200 #
+    volumes:
+      - .:/code
+    ports:
+      - "4200:4200"
