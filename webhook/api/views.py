@@ -32,7 +32,7 @@ def process_build(payloads, event_name):
         os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         shell_run = subprocess.run([
-            'git', 'pull',
+            'git', 'pull', 'origin', 'master',
             '&&',
             'export', 'DOCKER_HOST=127.0.0.1',
             '&&',
