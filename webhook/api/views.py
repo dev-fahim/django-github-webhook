@@ -33,6 +33,7 @@ def process_build(payloads, event_name):
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         shell_run = subprocess.run(['sudo', '/home/fahim/build.sh'], capture_output=True)
         error_logs = shell_run.stderr.decode('utf-8')
+        print("Now on: " + os.getcwd())
         logs = shell_run.stdout.decode('utf-8')
         returned = shell_run.returncode
         if returned > 0:
@@ -42,6 +43,7 @@ def process_build(payloads, event_name):
             obj.build_status = BUILD_STATUS_CHOICES[2][0]
             obj.build_logs = logs
         obj.return_code = returned
+        obj.save()
         os.chdir(working_directory)
         k = "Done try"
     except:
@@ -62,7 +64,8 @@ def get_webhook_events(request):
     k = None
     if event_name in ['push']:
         k = process_build(payloads, event_name)
-    return Response(data={"status": k, 'payloads': payloads}, status=status.HTTP_201_CREATED)
+    print(k)
+    return Response(data={'payloads': payloads}, status=status.HTTP_201_CREATED)
 
 
 class WebHookListAPIView(ListAPIView):
