@@ -17,3 +17,5 @@ class WebHookAdmin(admin.ModelAdmin):
 
 
 admin.site.register(WebHook, WebHookAdmin)
+
+# Changed here
