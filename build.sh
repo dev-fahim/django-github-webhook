@@ -2,13 +2,13 @@
 
 git pull
 
-docker-compose build
+sudo docker-compose build
 
-docker-compose run web python manage.py check
+sudo docker-compose run web python manage.py check
 
-docker-compose run web python manage.py makemigrations
-docker-compose run web python manage.py migrate
+sudo docker-compose run web python manage.py makemigrations
+sudo docker-compose run web python manage.py migrate
 
-docker-compose up -d
+sudo docker-compose up -d
 
-docker-compose logs -t --tail=100
+sudo docker-compose logs -t --tail=100
