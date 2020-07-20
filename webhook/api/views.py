@@ -34,8 +34,6 @@ def process_build(payloads, event_name):
         shell_run = subprocess.run([
             'git', 'pull', 'origin', 'master',
             '&&',
-            'export', 'DOCKER_HOST=127.0.0.1',
-            '&&',
             'docker-compose', 'down',
             '&&',
             'docker-compose', 'build',
