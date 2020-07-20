@@ -32,7 +32,25 @@ def process_build(payloads, event_name):
         os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull")
-        shell_run = subprocess.run(['sudo', '/home/fahim/build.sh'], capture_output=True)
+        shell_run = subprocess.run([
+            'git', 'pull',
+            '&&',
+            'export', 'DOCKER_HOST=127.0.0.1',
+            '&&',
+            'docker-compose', 'down',
+            '&&',
+            'docker-compose', 'build',
+            '&&',
+            'docker-compose', 'run', 'web', 'python', 'manage.py', 'check',
+            '&&',
+            'docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations',
+            '&&',
+            'docker-compose', 'run' 'web', 'python', 'manage.py', 'migrate',
+            '&&',
+            'docker-compose', 'up', '-d',
+            '&&',
+            'docker-compose', 'logs', '-t', '--tail=10',
+        ], capture_output=True)
         error_logs = shell_run.stderr.decode('utf-8')
         print("Now on: " + os.getcwd())
         logs = shell_run.stdout.decode('utf-8')
