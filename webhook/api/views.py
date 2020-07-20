@@ -15,7 +15,7 @@ import pprint
 def process_build(payloads):
     working_directory = os.getcwd()
     project_dir = payloads['repository']['full_name']
-    os.chdir(os.path.expanduser('~' + '/app/' + project_dir))
+    os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
     shell_run = subprocess.run(['source', working_directory + 'build.sh'], capture_output=True)
     error_logs = shell_run.stderr.decode('utf-8')
     logs = shell_run.stdout.decode('utf-8')
