@@ -7,8 +7,12 @@ from webhook.models import WebHook
 class WebHookAdmin(admin.ModelAdmin):
     list_display = (
         'event_name',
+        'received',
         'event_id',
-        'received'
+        'repository_name',
+        'repository_owner_name',
+        'repository_url',
+        'sender_login',
     )
 
 
