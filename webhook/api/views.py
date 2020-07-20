@@ -28,8 +28,8 @@ def process_build(payloads):
 
 @api_view(['POST'])
 def get_webhook_events(request):
-    WebHook.objects.add_record(request)
     payloads = json.loads(request.body)
+    WebHook.objects.add_record(request)
     process_build(payloads)
     return Response(data={'payloads': payloads}, status=status.HTTP_201_CREATED)
 
