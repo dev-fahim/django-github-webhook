@@ -31,6 +31,7 @@ def process_build(payloads, event_name):
         k = "Saved"
         os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
+        os.system("git pull")
         shell_run = subprocess.run(['sudo', '/home/fahim/build.sh'], capture_output=True)
         error_logs = shell_run.stderr.decode('utf-8')
         print("Now on: " + os.getcwd())
