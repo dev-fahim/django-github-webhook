@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from webhook.api.views import get_webhook_events
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', get_webhook_events, name='webhook_events')
 ]
