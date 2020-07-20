@@ -11,6 +11,8 @@ BUILD_STATUS_CHOICES = (
 class AppBuildRecord(models.Model):
 
     build_on_event = models.CharField(max_length=255)
+    repository_name = models.CharField(max_length=255)  # ['repository']['name']
+    repository_owner_name = models.CharField(max_length=255)  # ['repository']['owner']['login']
     build_started_at = models.DateTimeField(auto_now_add=True)
     build_status = models.CharField(max_length=255, choices=BUILD_STATUS_CHOICES)
     return_code = models.IntegerField()

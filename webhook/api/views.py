@@ -20,6 +20,8 @@ def process_build(payloads, event_name):
     working_directory = os.getcwd()
     project_dir = payloads['repository']['full_name']
     obj = AppBuildRecord.objects.create(
+        repository_name=payloads['repository']['name'],
+        repository_owner_name=payloads['repository']['owner']['login'],
         build_on_event=event_name,
         build_status=BUILD_STATUS_CHOICES[0][0],
         return_code=returned,
@@ -31,9 +33,8 @@ def process_build(payloads, event_name):
         k = "Saved"
         os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
+        os.system("git pull origin master")
         shell_run = subprocess.run([
-            'git', 'pull', 'origin', 'master',
-            '&&',
             'docker-compose', 'down',
             '&&',
             'docker-compose', 'build',
