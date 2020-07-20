@@ -2,6 +2,10 @@
 
 git pull
 
+export DOCKER_HOST=127.0.0.1
+
+sudo docker-compose down
+
 sudo docker-compose build
 
 sudo docker-compose run web python manage.py check
