@@ -24,7 +24,6 @@ def process_build(payloads):
     print(error_logs)
     print(logs)
     print(returned)
-
     os.chdir(working_directory)
 
 
