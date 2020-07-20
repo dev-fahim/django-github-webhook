@@ -16,6 +16,7 @@ def process_build(payloads):
     working_directory = os.getcwd()
     project_dir = payloads['repository']['full_name']
     os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
+    # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
     shell_run = subprocess.run([working_directory + '/build.sh'], capture_output=True)
     error_logs = shell_run.stderr.decode('utf-8')
     logs = shell_run.stdout.decode('utf-8')
