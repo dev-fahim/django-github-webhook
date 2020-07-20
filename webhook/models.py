@@ -6,6 +6,9 @@ from uuid import uuid4
 
 class WebHook(models.Model):
     event_id = models.UUIDField(editable=False, default=uuid4)
+    repository_name = models.CharField(max_length=255)  # ['repository']['name']
+    repository_owner_name = models.CharField(max_length=255)  # ['repository']['owner']['name']
+    repository_url = models.URLField()  # ['repository']['url']
     event_name = models.CharField(max_length=255)
     payloads = models.TextField()
     received = models.DateTimeField(auto_now_add=True)
