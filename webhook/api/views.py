@@ -6,6 +6,9 @@ from webhook.models import WebHook
 from django.utils.timezone import now
 import subprocess
 import os
+from rest_framework.generics import ListAPIView
+from rest_framework import permissions
+from webhook.api.serializers import WebHookSerializer
 
 
 def process_build(payloads):
@@ -29,3 +32,11 @@ def get_webhook_events(request):
     payloads = json.loads(request.body)
     process_build(payloads)
     return Response(data={'payloads': payloads}, status=status.HTTP_201_CREATED)
+
+
+class WebHookListAPIView(ListAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
+    serializer_class = WebHookSerializer
+
+    def get_queryset(self):
+        return WebHook.objects.all().order_by('-id')

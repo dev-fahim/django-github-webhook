@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from webhook.api.views import get_webhook_events
+from webhook.api.views import get_webhook_events, WebHookListAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', get_webhook_events, name='webhook_events')
+    path('', WebHookListAPIView.as_view(), name='webhook_list'),
+    path('github/webhook/', get_webhook_events, name='webhook_events'),
 ]
