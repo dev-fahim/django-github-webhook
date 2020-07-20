@@ -22,7 +22,7 @@ def process_build(payloads, event_name):
     obj = AppBuildRecord.objects.create(
         repository_name=payloads['repository']['name'],
         repository_owner_name=payloads['repository']['owner']['login'],
-        build_on_event=event_name,
+        build_on_event=event_name.title(),
         build_status=BUILD_STATUS_CHOICES[0][0],
         return_code=returned,
         build_logs="Not available"
@@ -35,17 +35,13 @@ def process_build(payloads, event_name):
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull origin master")
         shell_run = subprocess.run([
-            'docker-compose', 'build',
-            '&&',
-            'docker-compose', 'run', 'web', 'python', 'manage.py', 'check',
-            '&&',
-            'docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations',
-            '&&',
-            'docker-compose', 'run' 'web', 'python', 'manage.py', 'migrate',
-            '&&',
-            'docker-compose', 'restart', '-d',
-            '&&',
-            'docker-compose', 'logs', '-t', '--tail=10',
+            'docker-compose', 'stop;',
+            'docker-compose', 'build;',
+            'docker-compose', 'run', 'web', 'python', 'manage.py', 'check;',
+            'docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations;',
+            'docker-compose', 'run' 'web', 'python', 'manage.py', 'migrate;',
+            'docker-compose', 'up', '-d;',
+            'docker-compose', 'logs', '-t', '--tail=10;',
         ], capture_output=True)
         error_logs = shell_run.stderr.decode('utf-8')
         print("Now on: " + os.getcwd())
@@ -75,7 +71,7 @@ def process_build(payloads, event_name):
 def get_webhook_events(request):
     payloads = request.data
     WebHook.objects.add_record(request)
-    event_name = request.headers.get('X-GitHub-Event')
+    event_name = str(request.headers.get('X-GitHub-Event'))
     k = None
     if event_name in ['push']:
         k = process_build(payloads, event_name)
