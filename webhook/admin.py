@@ -7,7 +7,7 @@ from webhook.models import WebHook
 class WebHookAdmin(admin.ModelAdmin):
     list_display = (
         'event_name',
-        'received',
+        'received_at',
         'event_id',
         'repository_name',
         'repository_owner_name',

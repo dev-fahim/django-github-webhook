@@ -23,14 +23,14 @@ class WebHookManager(models.Manager):
 
 
 class WebHook(models.Model):
-    event_id = models.UUIDField(editable=False, default=uuid4)
+    event_id = models.UUIDField(editable=False, default=uuid4, verbose_name='Event local ID')
     repository_name = models.CharField(max_length=255)  # ['repository']['name']
     repository_owner_name = models.CharField(max_length=255)  # ['repository']['owner']['name']
     repository_url = models.URLField()  # ['repository']['url']
-    sender_login = models.CharField(max_length=255)  # ['sender']['login']
+    sender_login = models.CharField(max_length=255, verbose_name='Event by')  # ['sender']['login']
     event_name = models.CharField(max_length=255)
     payloads = models.TextField()
-    received = models.DateTimeField(auto_now_add=True)
+    received_at = models.DateTimeField(auto_now_add=True)
 
     objects = WebHookManager()
 
