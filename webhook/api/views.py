@@ -10,29 +10,51 @@ from rest_framework.generics import ListAPIView
 from rest_framework import permissions
 from webhook.api.serializers import WebHookSerializer
 import pprint
+from app_build.models import AppBuildRecord, BUILD_STATUS_CHOICES
 
 
-def process_build(payloads):
+def process_build(payloads, event_name):
+    returned = -1
+
     working_directory = os.getcwd()
     project_dir = payloads['repository']['full_name']
-    os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
-    # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
-    shell_run = subprocess.run(['sudo', '/home/fahim/build.sh'], capture_output=True)
-    error_logs = shell_run.stderr.decode('utf-8')
-    logs = shell_run.stdout.decode('utf-8')
-    returned = shell_run.returncode
-    print(now())
-    print(error_logs)
-    print(logs)
-    print(returned)
-    os.chdir(working_directory)
+    obj = AppBuildRecord.objects.create(
+        build_on_event=event_name,
+        build_status=BUILD_STATUS_CHOICES[0][0],
+        return_code=returned,
+        build_logs="Not available"
+    )
+    try:
+        obj.save()
+        os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
+        # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
+        shell_run = subprocess.run(['sudo', '/home/fahim/build.sh'], capture_output=True)
+        error_logs = shell_run.stderr.decode('utf-8')
+        logs = shell_run.stdout.decode('utf-8')
+        returned = shell_run.returncode
+        if returned > 0:
+            obj.build_status = BUILD_STATUS_CHOICES[1][0]
+            obj.build_logs = error_logs
+        else:
+            obj.build_status = BUILD_STATUS_CHOICES[2][0]
+            obj.build_logs = logs
+        obj.return_code = returned
+        os.chdir(working_directory)
+    except:
+        obj.build_status = BUILD_STATUS_CHOICES[1][0]
+        obj.build_logs = "Can't run the file"
+        obj.return_code = returned
+        obj.save()
+        pprint.pprint("error occurred on running file...")
 
 
 @api_view(['POST'])
 def get_webhook_events(request):
     payloads = request.data
     WebHook.objects.add_record(request)
-    process_build(payloads)
+    event_name = request.headers.get('X-GitHub-Event')
+    if event_name in ['push']:
+        process_build(payloads, event_name)
     return Response(data={'payloads': payloads}, status=status.HTTP_201_CREATED)
 
 
