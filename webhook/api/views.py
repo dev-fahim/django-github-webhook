@@ -9,6 +9,7 @@ import os
 from rest_framework.generics import ListAPIView
 from rest_framework import permissions
 from webhook.api.serializers import WebHookSerializer
+import pprint
 
 
 def process_build(payloads):
@@ -28,7 +29,7 @@ def process_build(payloads):
 
 @api_view(['POST'])
 def get_webhook_events(request):
-    payloads = json.loads(request.body)
+    payloads = request.data
     WebHook.objects.add_record(request)
     process_build(payloads)
     return Response(data={'payloads': payloads}, status=status.HTTP_201_CREATED)

@@ -1,6 +1,5 @@
 from django.db import models
 from uuid import uuid4
-from rest_framework.request import Request
 import json
 
 # Create your models here.
@@ -9,9 +8,9 @@ import json
 class WebHookManager(models.Manager):
 
     @staticmethod
-    def add_record(request: Request):
-        body = request.body.decode('utf-8')
-        body_json = json.loads(body)
+    def add_record(request):
+        body = json.dumps(request.data)
+        body_json = request.data
         WebHook.objects.create(
             event_name=str(request.headers.get('X-GitHub-Event')).title(),
             payloads=body,
