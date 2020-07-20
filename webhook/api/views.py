@@ -7,5 +7,6 @@ import json
 @api_view(['POST'])
 def get_webhook_events(request):
     body = request.body.decode('utf-8')
-    print(body)
-    return Response(data={'payloads': body}, status=status.HTTP_201_CREATED)
+    print(request.headers.get('X-GitHub-Event'))
+    print(json.loads(request.body))
+    return Response(data={'payloads': json.loads(request.body)}, status=status.HTTP_201_CREATED)
