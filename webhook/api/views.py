@@ -44,6 +44,7 @@ def process_build(payloads, event_name):
         print("Now on: " + os.getcwd())
         logs = sys.stdout
         returned = docker
+        print(returned)
         if returned > 0:
             obj.build_status = BUILD_STATUS_CHOICES[1][0]
             obj.build_logs = error_logs
