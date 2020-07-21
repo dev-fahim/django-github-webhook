@@ -14,6 +14,15 @@ class WebHookAdmin(admin.ModelAdmin):
         'repository_url',
         'sender_login',
     )
+    search_fields = [
+        'event_name',
+        'received_at',
+        'event_id',
+        'repository_name',
+        'repository_owner_name',
+        'repository_url',
+        'sender_login',
+    ]
 
 
 admin.site.register(WebHook, WebHookAdmin)

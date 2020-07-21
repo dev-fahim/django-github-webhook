@@ -8,7 +8,7 @@ import json
 class WebHookManager(models.Manager):
 
     @staticmethod
-    def add_record(request):
+    def add_record(request, uuid):
         body = json.dumps(request.data)
         body_json = request.data
         WebHook.objects.create(
@@ -18,6 +18,7 @@ class WebHookManager(models.Manager):
             repository_owner_name=body_json['repository']['owner']['login'],
             repository_url=body_json['repository']['url'],
             sender_login=body_json['sender']['login'],
+            event_id=uuid
         )
 
 

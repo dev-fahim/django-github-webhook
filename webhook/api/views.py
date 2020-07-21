@@ -14,14 +14,16 @@ from app_build.models import AppBuildRecord, BUILD_STATUS_CHOICES
 import sys
 import time
 from django_q.tasks import async_task
+from uuid import uuid4
 
 @api_view(['POST'])
 def get_webhook_events(request):
     payloads = request.data
-    WebHook.objects.add_record(request)
+    uuid = uuid4()
+    WebHook.objects.add_record(request, uuid)
     event_name = str(request.headers.get('X-GitHub-Event'))
     if event_name in ['push', "None"]:
-        async_task('webhook.api.process.process_build', payloads, event_name)
+        async_task('webhook.api.process.process_build', payloads, event_name, uuid)
     return Response(data={'payloads': payloads}, status=status.HTTP_201_CREATED)
 
 

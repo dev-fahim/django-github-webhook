@@ -1,4 +1,5 @@
 from django.db import models
+from uuid import uuid4
 
 # Create your models here.
 BUILD_STATUS_CHOICES = (
@@ -9,7 +10,8 @@ BUILD_STATUS_CHOICES = (
 
 
 class AppBuildRecord(models.Model):
-
+    build_id = models.UUIDField(editable=False, default=uuid4, verbose_name='Build local ID')
+    event_id = models.UUIDField(editable=False, default=uuid4, verbose_name='Event local ID')
     build_on_event = models.CharField(max_length=255)
     repository_name = models.CharField(max_length=255)  # ['repository']['name']
     repository_owner_name = models.CharField(max_length=255)  # ['repository']['owner']['login']

@@ -13,13 +13,14 @@ import pprint
 from app_build.models import AppBuildRecord, BUILD_STATUS_CHOICES
 import sys
 import time
+from uuid import uuid4()
 
 
-def process_build(payloads, event_name):
+def process_build(payloads, event_name, event_id):
     returned = -1
     logs = None
     error_logs = None
-
+    build_id = uuid4()
     working_directory = os.getcwd()
     project_dir = payloads['repository']['full_name']
     obj = AppBuildRecord.objects.create(
@@ -28,7 +29,9 @@ def process_build(payloads, event_name):
         build_on_event=event_name.title(),
         build_status=BUILD_STATUS_CHOICES[0][0],
         return_code=returned,
-        build_logs="Not available"
+        build_logs="Not available",
+        build_id=build_id,
+        event_id=event_id
     )
     try:
         obj.save()
