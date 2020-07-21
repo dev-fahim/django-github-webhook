@@ -33,15 +33,12 @@ def process_build(payloads, event_name):
     try:
         obj.save()
         k = "Saved"
-        os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
+        project_dir = '/home/fahim' + '/app/' + project_dir
+        os.chdir(os.path.expanduser(project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull origin master")
 
-        shell_run = subprocess.call(
-            'docker-compose stop ; docker-compose build ; docker-compose run web python manage.py check ; '
-            'docker-compose run web python manage.py makemigrations ; docker-compose run web python manage.py migrate '
-            '; docker-compose up -d ; docker-compose logs -t --tail=10 '
-            , shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        shell_run = subprocess.run([working_directory + '/build.sh'], capture_output=True, cwd=os.path.expanduser(project_dir))
 
         error_logs = shell_run.stderr.decode('utf-8')
         print("Now on: " + os.getcwd())
@@ -59,7 +56,7 @@ def process_build(payloads, event_name):
         k = "Done try"
     except:
         obj.build_status = BUILD_STATUS_CHOICES[1][0]
-        obj.build_logs = "Can't run the file" + error_logs
+        obj.build_logs = "Can't run the file"
         obj.return_code = returned
         obj.save()
         pprint.pprint("error occurred on running file...")
