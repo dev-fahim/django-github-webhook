@@ -30,37 +30,29 @@ def process_build(payloads, event_name):
         build_logs="Not available"
     )
     k = "Added"
-    try:
-        obj.save()
-        k = "Saved"
-        project_dir = '/home/fahim' + '/app/' + project_dir
-        os.chdir(os.path.expanduser(project_dir))
-        # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
-        os.system("git pull origin master")
+    obj.save()
+    k = "Saved"
+    project_dir = '/home/fahim' + '/app/' + project_dir
+    os.chdir(os.path.expanduser(project_dir))
+    # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
+    os.system("git pull origin master")
 
-        shell_run = subprocess.run([working_directory + '/build.sh'], capture_output=True, cwd=os.path.expanduser(project_dir), shell=True)
+    shell_run = subprocess.run([working_directory + '/build.sh'], capture_output=True, cwd=os.path.expanduser(project_dir), shell=True)
 
-        error_logs = shell_run.stderr.decode('utf-8')
-        print("Now on: " + os.getcwd())
-        logs = shell_run.stdout.decode('utf-8')
-        returned = shell_run.returncode
-        if returned > 0:
-            obj.build_status = BUILD_STATUS_CHOICES[1][0]
-            obj.build_logs = error_logs
-        else:
-            obj.build_status = BUILD_STATUS_CHOICES[2][0]
-            obj.build_logs = logs
-        obj.return_code = returned
-        obj.save()
-        os.chdir(working_directory)
-        k = "Done try"
-    except:
+    error_logs = shell_run.stderr.decode('utf-8')
+    print("Now on: " + os.getcwd())
+    logs = shell_run.stdout.decode('utf-8')
+    returned = shell_run.returncode
+    if returned > 0:
         obj.build_status = BUILD_STATUS_CHOICES[1][0]
-        obj.build_logs = "Can't run the file"
-        obj.return_code = returned
-        obj.save()
-        pprint.pprint("error occurred on running file...")
-        k = "Done except"
+        obj.build_logs = error_logs
+    else:
+        obj.build_status = BUILD_STATUS_CHOICES[2][0]
+        obj.build_logs = logs
+    obj.return_code = returned
+    obj.save()
+    os.chdir(working_directory)
+    k = "Done try"
     return k
 
 
