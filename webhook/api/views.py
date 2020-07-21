@@ -38,7 +38,7 @@ def process_build(payloads, event_name):
         os.chdir(os.path.expanduser(project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull origin master")
-        docker = os.system("docker compose build")
+        docker = os.system("docker-compose build")
 
         error_logs = sys.stderr
         print("Now on: " + os.getcwd())
