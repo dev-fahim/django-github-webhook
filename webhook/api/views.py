@@ -16,6 +16,8 @@ from app_build.models import AppBuildRecord, BUILD_STATUS_CHOICES
 def process_build(payloads, event_name):
     returned = -1
     k = "Hello"
+    logs = None
+    error_logs = None
 
     working_directory = os.getcwd()
     project_dir = payloads['repository']['full_name']
@@ -35,13 +37,13 @@ def process_build(payloads, event_name):
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull origin master")
 
-        shell_run = subprocess.Popen([
+        shell_run = subprocess.run([
             'docker-compose stop ; docker-compose build ; docker-compose run web python manage.py check ; docker-compose run web python manage.py makemigrations ; docker-compose run web python manage.py migrate ; docker-compose up -d ; docker-compose logs -t --tail=10',
-        ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ], shell=True, capture_output=True)
 
-        error_logs = shell_run.stderr.read().decode('utf-8')
+        error_logs = shell_run.stderr.decode('utf-8')
         print("Now on: " + os.getcwd())
-        logs = shell_run.stdout.read().decode('utf-8')
+        logs = shell_run.stdout.decode('utf-8')
         returned = shell_run.returncode
         if returned > 0:
             obj.build_status = BUILD_STATUS_CHOICES[1][0]
@@ -55,7 +57,7 @@ def process_build(payloads, event_name):
         k = "Done try"
     except:
         obj.build_status = BUILD_STATUS_CHOICES[1][0]
-        obj.build_logs = "Can't run the file"
+        obj.build_logs = "Can't run the file" + error_logs
         obj.return_code = returned
         obj.save()
         pprint.pprint("error occurred on running file...")
