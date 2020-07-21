@@ -14,6 +14,7 @@ class AppBuildRecordAdmin(admin.ModelAdmin):
         'build_status',
         'return_code'
     ]
+    readonly_fields = ('build_logs', )
 
 
 admin.site.register(AppBuildRecord, AppBuildRecordAdmin)

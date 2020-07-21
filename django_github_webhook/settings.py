@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'webhook',
     'app_build',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+Q_CLUSTER = {
+    'name': 'default',
+    'workers': 2,
+    'recycle': 500,
+    'timeout': 600,
+    'compress': True,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'cpu_affinity': 1,
+    'label': 'Django Q',
+    'redis': {
+        'host': '127.0.0.1',
+        'port': 6379,
+        'db': 0, }
+}
