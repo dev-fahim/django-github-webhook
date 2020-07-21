@@ -38,16 +38,12 @@ def process_build(payloads, event_name):
         os.chdir(os.path.expanduser(project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull origin master")
+        docker = os.system("docker compose build")
 
-        try:
-            shell_run = subprocess.run([working_directory + '/build.sh'], capture_output=True, shell=True)
-        except:
-            print("Error " + sys.exc_info()[0])
-
-        error_logs = shell_run.stderr.decode('utf-8')
+        error_logs = sys.stderr
         print("Now on: " + os.getcwd())
-        logs = shell_run.stdout.decode('utf-8')
-        returned = shell_run.returncode
+        logs = sys.stdout
+        returned = docker
         if returned > 0:
             obj.build_status = BUILD_STATUS_CHOICES[1][0]
             obj.build_logs = error_logs
