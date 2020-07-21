@@ -39,9 +39,6 @@ def process_build(payloads, event_name):
         docker = subprocess.run(
             "docker-compose down;"
             "docker-compose build;"
-            "docker-compose run web python manage.py check;"
-            "docker-compose run web python manage.py makemigrations;"
-            "docker-compose run web python manage.py migrate;"
             "docker-compose up -d;"
             "docker-compose logs --tail=100;",
             shell=True, capture_output=True
