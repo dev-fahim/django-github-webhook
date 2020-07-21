@@ -37,7 +37,7 @@ def process_build(payloads, event_name):
     # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
     os.system("git pull origin master")
 
-    shell_run = subprocess.run([working_directory + '/build.sh'], capture_output=True, cwd=os.path.expanduser(project_dir), shell=True)
+    shell_run = subprocess.run([working_directory + '/build.sh'], capture_output=True, shell=True)
 
     error_logs = shell_run.stderr.decode('utf-8')
     print("Now on: " + os.getcwd())
