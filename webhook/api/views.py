@@ -34,8 +34,9 @@ def process_build(payloads, event_name):
         os.chdir(os.path.expanduser('/home/fahim' + '/app/' + project_dir))
         # /home/fahim/app/dev-fahim/django-github-webhook/build.sh
         os.system("git pull origin master")
+        """
         shell_run = subprocess.run([
-            'docker-compose stop;', '&&',
+            'docker-compose', 'stop', '&&',
             'docker-compose', 'build', '&&',
             'docker-compose', 'run', 'web', 'python', 'manage.py', 'check', '&&',
             'docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations', '&&',
@@ -43,6 +44,20 @@ def process_build(payloads, event_name):
             'docker-compose', 'up', '-d', '&&',
             'docker-compose', 'logs', '-t', '--tail=10', '&&',
         ], capture_output=True)
+        """
+        shell_run = subprocess.run(['docker-compose', 'stop'], capture_output=True)
+        if shell_run.returncode == 0:
+            shell_run = subprocess.run(['docker-compose', 'build'], capture_output=True)
+            if shell_run.returncode == 0:
+                shell_run = subprocess.run(['docker-compose', 'run', 'web', 'python', 'manage.py', 'check'], capture_output=True)
+                if shell_run.returncode == 0:
+                    shell_run = subprocess.run(['docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations'], capture_output=True)
+                    if shell_run.returncode == 0:
+                        shell_run = subprocess.run(['docker-compose', 'run' 'web', 'python', 'manage.py', 'migrate'], capture_output=True)
+                        if shell_run.returncode == 0:
+                            shell_run = subprocess.run(['docker-compose', 'up'], capture_output=True)
+                            if shell_run.returncode == 0:
+                                shell_run = subprocess.run(['docker-compose', 'logs', '-t', '--tail=10'], capture_output=True)
         error_logs = shell_run.stderr.decode('utf-8')
         print("Now on: " + os.getcwd())
         logs = shell_run.stdout.decode('utf-8')
