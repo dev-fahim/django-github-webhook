@@ -36,7 +36,6 @@ def process_build(payloads, event_name):
         os.system("git pull origin master")
 
         shell_run = subprocess.run([
-            'docker-compose', 'stop', '&&',
             'docker-compose', 'build', '&&',
             'docker-compose', 'run', 'web', 'python', 'manage.py', 'check', '&&',
             'docker-compose', 'run', 'web', 'python', 'manage.py', 'makemigrations', '&&',
