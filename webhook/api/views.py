@@ -11,6 +11,7 @@ from rest_framework import permissions
 from webhook.api.serializers import WebHookSerializer
 import pprint
 from app_build.models import AppBuildRecord, BUILD_STATUS_CHOICES
+import sys
 
 
 def process_build(payloads, event_name):
@@ -56,7 +57,7 @@ def process_build(payloads, event_name):
         k = "Done try"
     except:
         obj.build_status = BUILD_STATUS_CHOICES[1][0]
-        obj.build_logs = "Can't run the file"
+        obj.build_logs = str(sys.exc_info()[0])
         obj.return_code = returned
         obj.save()
         pprint.pprint("error occurred on running file...")
