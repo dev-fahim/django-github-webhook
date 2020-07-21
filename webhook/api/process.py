@@ -13,7 +13,7 @@ import pprint
 from app_build.models import AppBuildRecord, BUILD_STATUS_CHOICES
 import sys
 import time
-from uuid import uuid4()
+from uuid import uuid4
 
 
 def process_build(payloads, event_name, event_id):
